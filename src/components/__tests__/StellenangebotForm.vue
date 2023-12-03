@@ -2,12 +2,12 @@
   <div>
     <h3>{{ title }}</h3>
     <div>
-      <input v-model="jobTitleField" placeholder="Job Title" type="text" id="jobTitle" autocomplete="organization-title">
-      <input v-model="companyField" placeholder="Company" type="text" id="company" autocomplete="organization">
-      <input v-model="locationField" placeholder="Location" type="text" id="location" autocomplete="location">
-      <input v-model="descriptionField" placeholder="Description" type="text" id="description" autocomplete="off">
-      <input v-model="deadlineField" placeholder="Deadline" type="date" id="deadline" autocomplete="off">
-      <input v-model="startDateField" placeholder="Start Date" type="date" id="startDate" autocomplete="off">
+      <input v-model="jobTitleField" placeholder="Job Title" type="text">
+      <input v-model="companyField" placeholder="Company" type="text">
+      <input v-model="locationField" placeholder="Location" type="text">
+      <input v-model="descriptionField" placeholder="Description" type="text">
+      <input v-model="deadlineField" placeholder="Deadline" type="date">
+      <input v-model="startDateField" placeholder="Start Date" type="date">
       <button type="button" @click="save()">Save</button>
     </div>
     <div>
