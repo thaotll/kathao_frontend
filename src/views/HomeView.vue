@@ -1,9 +1,13 @@
-<script setup lang="ts">
-import TheWelcome from '../components/TheWelcome.vue'
-</script>
-
 <template>
   <main>
-    <TheWelcome />
+    <StellenangebotForm title="Stellenangebote verwalten" />
   </main>
 </template>
+
+<script setup lang="ts">
+import StellenangebotForm from '../components/__tests__/StellenangebotForm.vue'
+</script>
+
+<style scoped>
+
+</style>
