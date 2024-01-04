@@ -54,8 +54,26 @@
             />
           </div>
         </div>
+
+        <div class="line"></div>
+
+        <div class="contact-section">
+          <div class="contact-header">
+            <h2>Kontaktiere uns</h2>
+          </div>
+
+          <div class="contact-description">
+            <p>
+              Haben Sie Fragen, Anregungen oder möchten Sie mit uns in Kontakt treten? Nutzen Sie das Formular unten, um uns zu erreichen.
+            </p>
+          </div>
+          <a class="contact-button" href="/jetzt-kontaktieren">
+            <button class="apply-button">Jetzt kontaktieren</button>
+          </a>
+        </div>
       </div>
     </div>
+    <FooterComponent/>
   </div>
 </template>
 
@@ -64,50 +82,52 @@ import { RouterLink } from 'vue-router';
 import NavBar from '@/components/NavBar.vue';
 import JobBoard from '@/components/JobBoard.vue';
 import {ref} from "vue";
+import FooterComponent from "@/components/FooterComponent.vue";
+import { useRouter } from 'vue-router';
 
 interface Job {
-id: number;
-image: string;
-jobTitle: string;
-companyTitle: string;
-location: string;
-description: string;
-deadline: string;
-startDate: string;
+  id: number;
+  image: string;
+  jobTitle: string;
+  companyTitle: string;
+  location: string;
+  description: string;
+  deadline: string;
+  startDate: string;
 }
 
 const jobList = ref<Job[]>([
-{
-id: 1,
-image: 'https://www.cursor.de/templates/yootheme/cache/a6/karriere_softwareentwickler_intro_AdobeStock_207766322_900x600-a657c930.webp',
-jobTitle: 'Softwareentwickler (m/w/d)',
-companyTitle: 'Tech Solutions GmbH',
-location: 'Berlin, Deutschland',
-description: 'Beschreibung: Wir suchen einen erfahrenen \n' +
-    'Softwareentwickler, der unser agiles Team bei der \n' +
-    'Entwicklung von innovativen Lösungen unterstützt. \n',
-deadline: '15. März 2023',
-startDate: 'sofort',
-},
+  {
+    id: 1,
+    image: 'https://www.cursor.de/templates/yootheme/cache/a6/karriere_softwareentwickler_intro_AdobeStock_207766322_900x600-a657c930.webp',
+    jobTitle: 'Softwareentwickler (m/w/d)',
+    companyTitle: 'Tech Solutions GmbH',
+    location: 'Berlin, Deutschland',
+    description: 'Beschreibung: Wir suchen einen erfahrenen \n' +
+        'Softwareentwickler, der unser agiles Team bei der \n' +
+        'Entwicklung von innovativen Lösungen unterstützt. \n',
+    deadline: '15. März 2023',
+    startDate: 'sofort',
+  },
   {
     id: 2,
     image: 'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSg5yPwDfPx6bz25o1R-Lnwm0P-xfEoDYBOlpavcg18pvJYYEoz',
     jobTitle: 'Marketing Manager (m/w/d)',
     companyTitle: 'MarketBoost AG',
-    location: 'München, Deutchland',
+    location: 'München, Deutschland',
     description: 'Beschreibung: Wir suchen einen Marketing Manager mit \n' +
         'nachgewiesener Erfahrung im Aufbau von Marken und der \n' +
         'Entwicklung erfolgreicher Marketingstrategien. \n' +
         'Kommunikationsgeschick und Kreativität sind gefragt!',
     deadline: '20. April 2023',
     startDate: '1. Juni 2023',
-},
+  },
   {
     id: 3,
     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZRAv3hP_rWQlXIJGam07wScAtCsn513s2Jwi6ZZ6qtuQ0sQVi',
     jobTitle: 'Finanzanalyst (m/w/d)',
     companyTitle: 'FinanceInsights GmbH',
-    location: 'Frankfurt, Deutchland',
+    location: 'Frankfurt, Deutschland',
     description: 'Beschreibung: Als Finanzanalyst wirst du in unserem\n' +
         'Team für die Analyse von Finanzdaten, die Erstellung \n' +
         'von Berichten und die Entwicklung von Prognosen \n' +
@@ -120,7 +140,7 @@ startDate: 'sofort',
     image: 'https://tristaljing.files.wordpress.com/2018/03/chat.jpeg?w=560',
     jobTitle: 'UX/UI Designer (m/w/d)',
     companyTitle: 'CreativeMind Studios',
-    location: 'Hamburg, Deutchland',
+    location: 'Hamburg, Deutschland',
     description: 'Beschreibung: CreativeMind Studios sucht einen kreativen\n' +
         'UX/UI Designer, der Leidenschaft für benutzerzentriertes Design und\n' +
         'die Fähigkeit zur Umsetzung innovativer Gestaltungskonzepte mitbringt.',
@@ -132,7 +152,7 @@ startDate: 'sofort',
     image: 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTwIcMhE3_XCQYnfrbt7G7Q4mvNvh827PSn1Ktp10ClJybtP_w_',
     jobTitle: 'HR Specialist (m/w/d)',
     companyTitle: 'TecTalentHub Solutions',
-    location: 'Düsseldorf, Deutchland',
+    location: 'Düsseldorf, Deutschland',
     description: 'Beschreibung: Du wirst als HR-Spezialist für Rekrutierung\n' +
         'und Personalentwicklung fungieren. Erfahrung im\n' +
         'Personalwesen und gute Kommunikationsfähigkeiten \n' +
@@ -145,14 +165,14 @@ startDate: 'sofort',
     image: 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTwIcMhE3_XCQYnfrbt7G7Q4mvNvh827PSn1Ktp10ClJybtP_w_',
     jobTitle: 'Datenwissenschaftler (m/w/d)',
     companyTitle: 'DataInsights Research Labs',
-    location: 'Stuttgart, Deutchland',
+    location: 'Stuttgart, Deutschland',
     description: 'Beschreibung: Wir suchen einen Datenwissenschaftler\n' +
         'mit starken analytischen Fähigkeiten. Du wirst an der\n' +
         'Entwicklung von Datenmodellen und der Extraktion von \n' +
         'Erkenntnissen aus komplexen Datensätzen beteiligt sein.',
     deadline: '20. April 2023',
     startDate: '1. Juni 2023',
-  }
+  },
 ]);
 </script>
 
@@ -307,7 +327,7 @@ body {
   height: 1px;
   background: #D6D6D6;
   margin-left: -120px;
-  margin-bottom: 40px;
+  margin-bottom: 70px;
   border: none;
   clear: both;
 }
@@ -318,12 +338,14 @@ body {
   font-weight: bold;
   color: black;
   margin-left: 500px;
+  margin-bottom: 20px;
 }
 
 .job-board-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
+  margin-bottom: 70px;
 }
 
 .job-board-item {
@@ -332,5 +354,40 @@ body {
   box-sizing: border-box;
 }
 
+.contact-section {
+  margin-top: 40px;
+}
+
+.contact-header h2 {
+  font-size: 25px;
+  font-family: sans-serif;
+  font-weight: bold;
+  color: black;
+  margin-left: 470px;
+}
+
+.contact-description p {
+  font-size: 14px;
+  color: black;
+  margin: 10px 0;
+  margin-left: 200px;
+}
+
+.contact-button {
+  margin-top: 30px;
+  margin-left: 500px;
+}
+
+.apply-button {
+  background-color: #0570B0;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  align-self: flex-end;
+  font-weight: bolder;
+  margin-bottom: 60px;
+}
 
 </style>
