@@ -2,9 +2,15 @@
   <nav>
     <div class="menu">
       <ul>
-        <li><RouterLink to="/">Startseite</RouterLink></li>
-        <li><RouterLink to="/favorites">Meine Favoriten</RouterLink></li>
-        <li><RouterLink to="/jobs">Meine Jobs</RouterLink></li>
+        <li>
+          <RouterLink :to="{ name: 'home' }">Startseite</RouterLink>
+        </li>
+        <li :class="{ 'active': $route.name === 'favoriten' }">
+          <RouterLink :to="{ name: 'favoriten' }">Meine Favoriten</RouterLink>
+        </li>
+        <li :class="{ 'active': $route.name === 'jobs' }">
+          <RouterLink :to="{ name: 'jobs' }">Meine Jobs</RouterLink>
+        </li>
       </ul>
     </div>
   </nav>
@@ -49,5 +55,9 @@ nav {
 .menu a::after {
   content: '|';
   margin-left: 8px;
+}
+
+.menu .active {
+  font-weight: bold;
 }
 </style>

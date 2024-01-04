@@ -1,13 +1,14 @@
 <template>
-  <main>
-    <StellenangebotForm title="Stellenangebote verwalten" />
-  </main>
+  <div id="app">
+     <!-- Fügen Sie die Navbar hier ein -->
+    <router-view /> <!-- Dies stellt sicher, dass die aktuellen Ansichten gerendert werden -->
+  </div>
 </template>
 
 <script setup lang="ts">
-import StellenangebotForm from './components/StellenangebotForm.vue'
+import NavBar from '@/components/NavBar.vue';
 </script>
 
-<style scoped>
-/* Hier können spezifische Stile für die HomeView hinzugefügt werden */
+<style>
+/* Fügen Sie hier ggf. globale Styles hinzu */
 </style>
