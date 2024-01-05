@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, onMounted } from 'vue';
 
 export default defineComponent({
   name: 'JobBoard',
@@ -27,38 +27,48 @@ export default defineComponent({
       type: String,
       required: true,
     },
-    jobTitle: {
-      type: String,
+    jobId: {
+      type: Number,
       required: true,
     },
-    companyTitle: {
-      type: String,
-      required: true,
-    },
-    location: {
-      type: String,
-      required: true,
-    },
-    description: {
-      type: String,
-      required: true,
-    },
-    deadline: {
-      type: String,
-      required: true,
-    },
-    startDate: {
-      type: String,
-      required: true,
-    },
+  },
+  data() {
+    return {
+      jobTitle: '',
+      companyTitle: '',
+      location: '',
+      description: '',
+      deadline: '',
+      startDate: '',
+    };
   },
   methods: {
     applyNow() {
       alert('Bewerbung wurde eingereicht!');
     },
+    fetchJobDetails() {
+      const apiUrl = 'http://localhost:8080/stellenangebote/' + this.jobId;
+      fetch(apiUrl)
+          .then((response) => response.json())
+          .then((data) => {
+            this.jobTitle = data.jobTitle;
+            this.companyTitle = data.companyTitle;
+            this.location = data.location;
+            this.description = data.description;
+            this.deadline = data.deadline;
+            this.startDate = data.startDate;
+          })
+          .catch((error) => {
+            console.error('Fehler beim Abrufen der Job-Daten:', error);
+          });
+    },
+  },
+  mounted() {
+    this.fetchJobDetails(); // Die Funktion wird im mounted-Hook aufgerufen
   },
 });
 </script>
+
 
 <style scoped>
 .job-board {

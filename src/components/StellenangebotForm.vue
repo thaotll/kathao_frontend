@@ -1,118 +1,53 @@
 <template>
   <div>
-    <h3>{{ title }}</h3>
     <div>
-      <input v-model="jobTitleField" id="jobTitle" placeholder="Job Title" type="text">
-      <input v-model="companyField" id="company" placeholder="Company" type="text">
-      <input v-model="locationField" id="location" placeholder="Location" type="text">
-      <input v-model="descriptionField" id="description" placeholder="Description" type="text">
-      <input v-model="deadlineField" id="deadline" placeholder="Deadline" type="date">
-      <input v-model="startDateField" id="startDate" placeholder="Start Date" type="date">
-      <button type="button" @click="save()">Save</button>
+      <input v-model="jobTitle" id="jobTitle" placeholder="Job Title" type="text">
+      <input v-model="company" id="company" placeholder="Company" type="text">
+      <input v-model="location" id="location" placeholder="Location" type="text">
+      <input v-model="description" id="description" placeholder="Description" type="text">
+      <input v-model="deadline" id="deadline" placeholder="Deadline" type="date">
+      <input v-model="startDate" id="startDate" placeholder="Start Date" type="date">
+      <button type="button" @click="saveJob">Save</button>
     </div>
     <div>
-      <table>
-        <thead>
-        <tr>
-          <th>Job Title</th>
-          <th>Company</th>
-          <th>Location</th>
-          <th>Description</th>
-          <th>Deadline</th>
-          <th>Start Date</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-if="items.length === 0">
-          <td colspan="6">No job postings yet</td>
-        </tr>
-        <tr v-for="item in items" :key="item.id">
-          <td>{{ item.jobTitle }}</td>
-          <td>{{ item.company }}</td>
-          <td>{{ item.location }}</td>
-          <td>{{ item.description }}</td>
-          <td>{{ item.deadline }}</td>
-          <td>{{ item.startDate }}</td>
-        </tr>
-        </tbody>
-      </table>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import type { Ref } from 'vue'
+import { ref, defineEmits } from 'vue';
 
-defineProps<{
-  title: string
-}>()
+const emit = defineEmits(['jobPosted']);
 
-type Stellenangebot = {
-  id?: number
-  jobTitle: string
-  company: string
-  location: string
-  description: string
-  deadline: string
-  startDate: string
+const jobTitle = ref('');
+const company = ref('');
+const location = ref('');
+const description = ref('');
+const deadline = ref('');
+const startDate = ref('');
+
+function saveJob() {
+  const newJob = {
+    jobTitle: jobTitle.value,
+    company: company.value,
+    location: location.value,
+    description: description.value,
+    deadline: deadline.value,
+    startDate: startDate.value,
+  };
+
+  emit('jobPosted', newJob);
+
+  jobTitle.value = '';
+  company.value = '';
+  location.value = '';
+  description.value = '';
+  deadline.value = '';
+  startDate.value = '';
 }
 
-const items: Ref<Stellenangebot[]> = ref([])
-const jobTitleField = ref('')
-const companyField = ref('')
-const locationField = ref('')
-const descriptionField = ref('')
-const deadlineField = ref('')
-const startDateField = ref('')
-
-function loadStellenangebote() {
-  const baseUrl = import.meta.env.VITE_BACKEND_BASE_URL
-  const endpoint = baseUrl + '/stellenangebote'
-
-  fetch(endpoint)
-      .then(response => response.json())
-      .then(result => {
-        items.value = result
-      })
-      .catch(error => console.error('Error loading job postings:', error))
-}
-
-function save() {
-  const baseUrl = import.meta.env.VITE_BACKEND_BASE_URL // 'http://localhost:8080' in dev mode
-  const endpoint = baseUrl + '/stellenangebote'
-
-  const data: Stellenangebot = {
-    jobTitle: jobTitleField.value,
-    company: companyField.value,
-    location: locationField.value,
-    description: descriptionField.value,
-    deadline: deadlineField.value,
-    startDate: startDateField.value,
-  }
-
-  const requestOptions: RequestInit = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(data)
-  }
-
-  fetch(endpoint, requestOptions)
-      .then(response => response.json())
-      .then(savedStellenangebot => {
-        items.value.push(savedStellenangebot)
-        console.log('Job posting saved successfully:', savedStellenangebot)
-      })
-      .catch(error => console.error('Error saving job posting:', error))
-}
-
-// Lifecycle hooks
-onMounted(() => {
-  loadStellenangebote()
-})
 </script>
+
 
 <style scoped>
 h3 {

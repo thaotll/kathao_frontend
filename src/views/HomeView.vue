@@ -42,19 +42,10 @@
         </div>
 
         <div class="job-board-container">
-          <div v-for="job in jobList" :key="job.id" class="job-board-item">
-            <JobBoard
-                :image="job.image"
-                :jobTitle="job.jobTitle"
-                :companyTitle="job.companyTitle"
-                :location="job.location"
-                :description="job.description"
-                :deadline="job.deadline"
-                :startDate="job.startDate"
-            />
+          <div v-for="job in jobList" :key="job.id">
+            <JobBoard :image="job.companyLogo || defaultCompanyLogo" :jobId="job.id" />
           </div>
         </div>
-
         <div class="line"></div>
 
         <div class="contact-section">
@@ -78,102 +69,46 @@
 </template>
 
 <script setup lang="ts">
-import { RouterLink } from 'vue-router';
+import { ref, onMounted } from 'vue';
 import NavBar from '@/components/NavBar.vue';
 import JobBoard from '@/components/JobBoard.vue';
-import {ref} from "vue";
-import FooterComponent from "@/components/FooterComponent.vue";
-import { useRouter } from 'vue-router';
+import CreateJobView from '@/views/CreateJobView.vue'; // Hier Import der CreateJobView-Komponente
+import FooterComponent from '@/components/FooterComponent.vue';
+import StellenangebotForm from "@/components/StellenangebotForm.vue";
 
-interface Job {
+type Job = {
   id: number;
-  image: string;
-  jobTitle: string;
+  title: string;
   companyTitle: string;
   location: string;
   description: string;
   deadline: string;
   startDate: string;
+  companyLogo: string;
+};
+
+const jobList = ref<Job[]>([]);
+const defaultCompanyLogo = 'https://imageio.forbes.com/specials-images/imageserve/5f40212498cbfd326eb150c8/0x0.jpg?format=jpg&height=900&width=1600&fit=bounds';
+
+async function loadJobList() {
+  try {
+    const response = await fetch('http://localhost:8080/stellenangebote');
+    if (response.ok) {
+      jobList.value = await response.json();
+    } else {
+      console.error('Fehler beim Laden der Stellenangebote:', response.statusText);
+    }
+  } catch (error) {
+    console.error('Fehler beim Laden der Stellenangebote:', error);
+  }
 }
 
-const jobList = ref<Job[]>([
-  {
-    id: 1,
-    image: 'https://www.cursor.de/templates/yootheme/cache/a6/karriere_softwareentwickler_intro_AdobeStock_207766322_900x600-a657c930.webp',
-    jobTitle: 'Softwareentwickler (m/w/d)',
-    companyTitle: 'Tech Solutions GmbH',
-    location: 'Berlin, Deutschland',
-    description: 'Beschreibung: Wir suchen einen erfahrenen \n' +
-        'Softwareentwickler, der unser agiles Team bei der \n' +
-        'Entwicklung von innovativen Lösungen unterstützt. \n',
-    deadline: '15. März 2023',
-    startDate: 'sofort',
-  },
-  {
-    id: 2,
-    image: 'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSg5yPwDfPx6bz25o1R-Lnwm0P-xfEoDYBOlpavcg18pvJYYEoz',
-    jobTitle: 'Marketing Manager (m/w/d)',
-    companyTitle: 'MarketBoost AG',
-    location: 'München, Deutschland',
-    description: 'Beschreibung: Wir suchen einen Marketing Manager mit \n' +
-        'nachgewiesener Erfahrung im Aufbau von Marken und der \n' +
-        'Entwicklung erfolgreicher Marketingstrategien. \n' +
-        'Kommunikationsgeschick und Kreativität sind gefragt!',
-    deadline: '20. April 2023',
-    startDate: '1. Juni 2023',
-  },
-  {
-    id: 3,
-    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZRAv3hP_rWQlXIJGam07wScAtCsn513s2Jwi6ZZ6qtuQ0sQVi',
-    jobTitle: 'Finanzanalyst (m/w/d)',
-    companyTitle: 'FinanceInsights GmbH',
-    location: 'Frankfurt, Deutschland',
-    description: 'Beschreibung: Als Finanzanalyst wirst du in unserem\n' +
-        'Team für die Analyse von Finanzdaten, die Erstellung \n' +
-        'von Berichten und die Entwicklung von Prognosen \n' +
-        'verantwortlich sein.',
-    deadline: '10. April 2023',
-    startDate: '15. Mai 2023',
-  },
-  {
-    id: 4,
-    image: 'https://tristaljing.files.wordpress.com/2018/03/chat.jpeg?w=560',
-    jobTitle: 'UX/UI Designer (m/w/d)',
-    companyTitle: 'CreativeMind Studios',
-    location: 'Hamburg, Deutschland',
-    description: 'Beschreibung: CreativeMind Studios sucht einen kreativen\n' +
-        'UX/UI Designer, der Leidenschaft für benutzerzentriertes Design und\n' +
-        'die Fähigkeit zur Umsetzung innovativer Gestaltungskonzepte mitbringt.',
-    deadline: '25. März 2023',
-    startDate: '1. Mai 2023',
-  },
-  {
-    id: 5,
-    image: 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTwIcMhE3_XCQYnfrbt7G7Q4mvNvh827PSn1Ktp10ClJybtP_w_',
-    jobTitle: 'HR Specialist (m/w/d)',
-    companyTitle: 'TecTalentHub Solutions',
-    location: 'Düsseldorf, Deutschland',
-    description: 'Beschreibung: Du wirst als HR-Spezialist für Rekrutierung\n' +
-        'und Personalentwicklung fungieren. Erfahrung im\n' +
-        'Personalwesen und gute Kommunikationsfähigkeiten \n' +
-        'sind entscheidend.',
-    deadline: '5. April 2023',
-    startDate: '19. Mai 2023',
-  },
-  {
-    id: 6,
-    image: 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTwIcMhE3_XCQYnfrbt7G7Q4mvNvh827PSn1Ktp10ClJybtP_w_',
-    jobTitle: 'Datenwissenschaftler (m/w/d)',
-    companyTitle: 'DataInsights Research Labs',
-    location: 'Stuttgart, Deutschland',
-    description: 'Beschreibung: Wir suchen einen Datenwissenschaftler\n' +
-        'mit starken analytischen Fähigkeiten. Du wirst an der\n' +
-        'Entwicklung von Datenmodellen und der Extraktion von \n' +
-        'Erkenntnissen aus komplexen Datensätzen beteiligt sein.',
-    deadline: '20. April 2023',
-    startDate: '1. Juni 2023',
-  },
-]);
+onMounted(loadJobList);
+
+const handleJobPosted = (newJob: Job) => {
+  jobList.value.push(newJob);
+};
+
 </script>
 
 <style scoped>
