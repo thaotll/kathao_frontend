@@ -2,7 +2,7 @@
   <div class="app">
     <div class="header">
       <p class="brand">Kathao</p>
-      <NavBar />
+      <NavBar/>
     </div>
 
     <div class="main-content">
@@ -10,15 +10,12 @@
         Meine Jobs
       </div>
 
-      <!-- Button "Jobanzeigen erstellen" -->
       <router-link to="/create-job" class="create-job-button">
-        Jobanzeigen erstellen  +
+        Jobanzeigen erstellen +
       </router-link>
 
-      <!-- Job Board -->
-
       <div class="job-board-container">
-        <div v-for="job in jobList" :key="job.id" class="job-board-item">
+        <div v-for="job in newJobs" :key="job.id" class="job-board-item">
           <JobBoard
               :image="job.image"
               :jobTitle="job.jobTitle"
@@ -27,22 +24,23 @@
               :description="job.description"
               :deadline="job.deadline"
               :startDate="job.startDate"
+              :jobId="job.id"
           />
         </div>
       </div>
-
+      <FooterComponent/>
     </div>
-    <FooterComponent />
   </div>
 </template>
 
 <script setup lang="ts">
-import { RouterLink } from 'vue-router';
+import {RouterLink} from 'vue-router';
 import NavBar from '@/components/NavBar.vue';
 import JobBoard from '@/components/JobBoard.vue';
-import { ref } from "vue";
+import {ref} from "vue";
 import FooterComponent from "@/components/FooterComponent.vue";
-import { useRouter } from 'vue-router';
+import {useRouter} from 'vue-router';
+import CreateJobView from "@/views/CreateJobView.vue";
 
 interface Job {
   id: number;
@@ -55,50 +53,15 @@ interface Job {
   startDate: string;
 }
 
-const jobList = ref<Job[]>([
-  {
-    id: 1,
-    image: 'https://www.cursor.de/templates/yootheme/cache/a6/karriere_softwareentwickler_intro_AdobeStock_207766322_900x600-a657c930.webp',
-    jobTitle: 'Softwareentwickler (m/w/d)',
-    companyTitle: 'Tech Solutions GmbH',
-    location: 'Berlin, Deutschland',
-    description: 'Beschreibung: Wir suchen einen erfahrenen \n' +
-        'Softwareentwickler, der unser agiles Team bei der \n' +
-        'Entwicklung von innovativen Lösungen unterstützt. \n',
-    deadline: '15. März 2023',
-    startDate: 'sofort',
-  },
-  {
-    id: 2,
-    image: 'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSg5yPwDfPx6bz25o1R-Lnwm0P-xfEoDYBOlpavcg18pvJYYEoz',
-    jobTitle: 'Marketing Manager (m/w/d)',
-    companyTitle: 'MarketBoost AG',
-    location: 'München, Deutchland',
-    description: 'Beschreibung: Wir suchen einen Marketing Manager mit \n' +
-        'nachgewiesener Erfahrung im Aufbau von Marken und der \n' +
-        'Entwicklung erfolgreicher Marketingstrategien. \n' +
-        'Kommunikationsgeschick und Kreativität sind gefragt!',
-    deadline: '20. April 2023',
-    startDate: '1. Juni 2023',
-  },
-  {
-    id: 3,
-    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZRAv3hP_rWQlXIJGam07wScAtCsn513s2Jwi6ZZ6qtuQ0sQVi',
-    jobTitle: 'Finanzanalyst (m/w/d)',
-    companyTitle: 'FinanceInsights GmbH',
-    location: 'Frankfurt, Deutchland',
-    description: 'Beschreibung: Als Finanzanalyst wirst du in unserem\n' +
-        'Team für die Analyse von Finanzdaten, die Erstellung \n' +
-        'von Berichten und die Entwicklung von Prognosen \n' +
-        'verantwortlich sein.',
-    deadline: '10. April 2023',
-    startDate: '15. Mai 2023',
-  }
-]);
+const newJobs = ref<Job[]>([]);
+
+function addNewJob(newJob: Job) {
+  newJobs.value.push(newJob);
+}
+
 </script>
 
 <style scoped>
-/* Füge die Styles für "Meine Favoriten" hinzu */
 body {
   margin: 0;
   padding: 0;
@@ -169,7 +132,6 @@ body {
   box-sizing: border-box;
 }
 
-/* Füge die Styles für den Button "Jobanzeigen erstellen" hinzu */
 .create-job-button {
   width: 80%;
   height: 100%;
