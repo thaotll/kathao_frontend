@@ -87,12 +87,16 @@ body {
   font-family: sans-serif;
   margin: 0;
   padding: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 .main-content {
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
-  margin-top: 60px;
+  margin-top: 80px;
   margin-left: 10px;
 }
 
@@ -132,7 +136,8 @@ body {
   text-align: left;
   padding: 0;
   line-height: 1.4;
-  margin: 0;
+  margin-top: 60px;
 }
+
 
 </style>

@@ -20,9 +20,7 @@
   color: black;
   text-align: center;
   padding: 20px;
-  position: fixed;
-  bottom: 0;
-  width: 100%;
+  position: relative;
 }
 
 
@@ -30,13 +28,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-left: -60px;
+  padding: 0 20px;
 }
 
 .footer-nav {
   display: flex;
   gap: 20px;
-  margin-right: 140px;
 }
 
 .footer-nav a {
@@ -47,6 +44,7 @@
 .manage-cookies {
   font-size: 14px;
 }
+
 </style>
 <script setup lang="ts">
 </script>

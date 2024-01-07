@@ -71,13 +71,18 @@ body {
   font-family: sans-serif;
   margin: 0;
   padding: 0;
+  min-height: 100vh;
+  display: flex;
 }
 
 .main-content {
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
-  margin-top: 60px;
+  margin-top: 80px;
   margin-left: 10px;
+  min-height: calc(100vh - 80px);
+  justify-content: space-between;
 }
 
 .header {
@@ -116,7 +121,7 @@ body {
   text-align: left;
   padding: 0;
   line-height: 1.4;
-  margin: 0;
+  margin-top: 60px;
 }
 
 .job-board-container {
@@ -133,8 +138,8 @@ body {
 }
 
 .create-job-button {
-  width: 80%;
-  height: 100%;
+  width: 200px;
+  height: 40px;
   border: 1px solid #CCCCCC;
   outline: none;
   background: #0570B0;
