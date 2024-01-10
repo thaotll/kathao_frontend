@@ -2,7 +2,7 @@
   <div class="app">
     <div class="header">
       <p class="brand">Kathao</p>
-      <NavBar />
+      <NavBar/>
     </div>
 
     <div class="main-content">
@@ -19,94 +19,94 @@
 
         <div class="content">
           <p>
-            Entdecke Tausende von Jobmöglichkeiten <br />
-            in verschiedenen Branchen und finde deinen perfekten <br />
+            Entdecke Tausende von Jobmöglichkeiten <br/>
+            in verschiedenen Branchen und finde deinen perfekten <br/>
             Match.
           </p>
         </div>
 
-        <div class="search-container">
-          <div class="search-input">
-            <input type="text" placeholder="Jobtitel, Stichworte, Unternehmen..." />
-          </div>
-
-          <div class="search-button">
-            <button>Jobs finden</button>
-          </div>
+        <SearchBar @search="handleSearch"/>
         </div>
-
         <div class="line"></div>
 
         <div class="job-list-header">
           <h2>Stellenanzeige</h2>
         </div>
-
-        <div class="job-board-container">
-          <div v-for="job in jobList" :key="job.id">
-            <JobBoard :image="job.companyLogo || defaultCompanyLogo" :jobId="job.id" />
+        <div class="job-board-item">
+          <div class="job-board-container">
+            <div v-for="job in filteredJobList" :key="job.id">
+              <JobBoard :image="job.companyLogo || defaultCompanyLogo" :jobId="job.id" @favorite="addToFavorites"/>
+            </div>
           </div>
         </div>
         <div class="line"></div>
-
-        <div class="contact-section">
-          <div class="contact-header">
-            <h2>Kontaktiere uns</h2>
-          </div>
-
-          <div class="contact-description">
-            <p>
-              Haben Sie Fragen, Anregungen oder möchten Sie mit uns in Kontakt treten? Nutzen Sie das Formular unten, um uns zu erreichen.
-            </p>
-          </div>
-          <a class="contact-button" href="/jetzt-kontaktieren">
-            <button class="apply-button">Jetzt kontaktieren</button>
-          </a>
-        </div>
+        <ContactSection/>
       </div>
     </div>
-    <FooterComponent/>
-  </div>
+  <FooterComponent/>
 </template>
 
-<script setup lang="ts">
-import { ref, onMounted } from 'vue';
+
+<script lang="ts" setup>
+import {onMounted, ref} from 'vue';
 import NavBar from '@/components/NavBar.vue';
 import JobBoard from '@/components/JobBoard.vue';
-import CreateJobView from '@/views/CreateJobView.vue'; // Hier Import der CreateJobView-Komponente
 import FooterComponent from '@/components/FooterComponent.vue';
-import StellenangebotForm from "@/components/StellenangebotForm.vue";
+import ContactSection from '@/components/ContactSection.vue';
+import SearchBar from '@/components/SearchBar.vue';
 
-type Job = {
+interface Job {
   id: number;
-  title: string;
-  companyTitle: string;
+  image: string;
+  jobTitle: string;
+  company: string;
   location: string;
   description: string;
   deadline: string;
   startDate: string;
   companyLogo: string;
-};
+  favorite: boolean;
+}
+
+const emit = defineEmits(['favorite']);
 
 const jobList = ref<Job[]>([]);
+const filteredJobList = ref<Job[]>([]);
+
 const defaultCompanyLogo = 'https://imageio.forbes.com/specials-images/imageserve/5f40212498cbfd326eb150c8/0x0.jpg?format=jpg&height=900&width=1600&fit=bounds';
 
-async function loadJobList() {
+const loadJobList = async () => {
   try {
     const response = await fetch('http://localhost:8080/stellenangebote');
     if (response.ok) {
       jobList.value = await response.json();
+      filteredJobList.value = jobList.value; // Initial set to all jobs
     } else {
       console.error('Fehler beim Laden der Stellenangebote:', response.statusText);
     }
   } catch (error) {
     console.error('Fehler beim Laden der Stellenangebote:', error);
   }
-}
+};
 
 onMounted(loadJobList);
 
-const handleJobPosted = (newJob: Job) => {
-  jobList.value.push(newJob);
+const handleSearch = (searchTerm: string) => {
+  if (!searchTerm.trim()) {
+    // Wenn kein Suchbegriff eingegeben wurde, setzen Sie die gefilterte Liste zurück auf die vollständige Liste
+    filteredJobList.value = jobList.value;
+  } else {
+    // Filtern basierend auf den gegebenen Kriterien
+    filteredJobList.value = jobList.value.filter((job) =>
+        job.jobTitle?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        job.company?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        job.location?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }
+};
+
+const addToFavorites = (jobId: number) => {
+  emit('favorite', jobId);
 };
 
 </script>
@@ -136,9 +136,10 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  z-index: 100;
 }
 
-.headline-container{
+.headline-container {
   margin-top: 80px;
 }
 
@@ -159,7 +160,7 @@ body {
   display: flex;
   flex-direction: column;
   margin-top: 60px;
-  margin-left: 10px;
+  margin-left: 80px;
 }
 
 .text-container {
@@ -204,64 +205,11 @@ body {
   text-align: center;
 }
 
-.search-container {
-  display: flex;
-  margin-top: 16px;
-  margin-bottom: 40px;
-}
-
-.search-input {
-  width: 60%;
-  max-width: 400px;
-  margin-top: 16px;
-  margin-bottom: 40px;
-}
-
-.search-button {
-  max-width: 300px;
-  margin-top: 16px;
-  margin-bottom: 40px;
-}
-
-.search-input input {
-  width: 100%;
-  height: 100%;
-  border: 1px solid #CCCCCC;
-  outline: none;
-  background: transparent;
-  font-family: sans-serif;
-  font-size: 10px;
-  color: #999999;
-  padding: 8px;
-}
-
-.search-button button {
-  width: 100%;
-  height: 100%;
-  border: 1px solid #CCCCCC;
-  outline: none;
-  background: #0570B0;
-  color: #FFFFFF;
-  font-family: sans-serif;
-  font-size: 10px;
-  cursor: pointer;
-  border-radius: 0px 3px 3px 0px;
-  padding: 8px;
-}
-
-.search-image {
-  width: 400px;
-  height: auto;
-  margin-left: 800px;
-  margin-top: -300px;
-  display: block;
-}
-
 .line {
   width: 100vw;
   height: 1px;
   background: #D6D6D6;
-  margin-left: -120px;
+  margin-left: -80px;
   margin-bottom: 70px;
   border: none;
   clear: both;
@@ -272,57 +220,18 @@ body {
   font-family: sans-serif;
   font-weight: bold;
   color: black;
-  margin-left: 500px;
-  margin-bottom: 20px;
-}
-
-.job-board-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  margin-bottom: 70px;
-}
-
-.job-board-item {
-  width: calc(33.33% - 10px);
-  margin-bottom: 10px;
-  box-sizing: border-box;
-}
-
-.contact-section {
-  margin-top: 40px;
-}
-
-.contact-header h2 {
-  font-size: 25px;
-  font-family: sans-serif;
-  font-weight: bold;
-  color: black;
-  margin-left: 470px;
-}
-
-.contact-description p {
-  font-size: 14px;
-  color: black;
-  margin: 10px 0;
-  margin-left: 200px;
-}
-
-.contact-button {
-  margin-top: 30px;
-  margin-left: 500px;
-}
-
-.apply-button {
-  background-color: #0570B0;
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 15px;
-  cursor: pointer;
-  align-self: flex-end;
-  font-weight: bolder;
+  margin-left: 520px;
   margin-bottom: 60px;
 }
 
+.job-board-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.job-board-item {
+  width: 100px;
+  box-sizing: border-box;
+}
 </style>
