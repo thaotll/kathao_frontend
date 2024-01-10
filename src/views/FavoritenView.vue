@@ -2,82 +2,105 @@
   <div class="app">
     <div class="header">
       <p class="brand">Kathao</p>
-      <NavBar />
+      <NavBar/>
     </div>
 
     <div class="main-content">
       <div class="headline">
         Meine Favoriten
       </div>
-
+      <div class="job-board-container">
+        <div v-if="favoriteJobs.length === 0">
+          <p>Keine favorisierten Jobs vorhanden.</p>
+        </div>
+        <div v-else class="job-board-container">
+          <div v-for="job in favoriteJobs" :key="job.id">
+            <JobBoard :image="job.companyLogo || defaultCompanyLogo" :jobId="job.id" @favorite="addToFavorites"/>
+            <div class="job-details">
+              <p class="job-title">{{ job.jobTitle }}</p>
+              <p class="company-title">{{ job.company }}</p>
+              <p class="location"><strong>Standort:</strong> {{ job.location }}</p>
+              <p class="description"><strong>Beschreibung:</strong> {{ job.description }}</p>
+              <p class="startDate"><strong>Startdatum:</strong> {{ job.startDate }}</p>
+              <p class="deadline"><strong>Bewerbungsfrist:</strong> {{ job.deadline }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <FooterComponent />
+    <FooterComponent/>
   </div>
 </template>
 
+
 <script setup lang="ts">
-import { RouterLink } from 'vue-router';
 import NavBar from '@/components/NavBar.vue';
 import JobBoard from '@/components/JobBoard.vue';
-import { ref } from "vue";
+import {onMounted, ref} from "vue";
 import FooterComponent from "@/components/FooterComponent.vue";
-import { useRouter } from 'vue-router';
 
 interface Job {
   id: number;
   image: string;
   jobTitle: string;
-  companyTitle: string;
+  company: string;
   location: string;
   description: string;
   deadline: string;
   startDate: string;
+  companyLogo: string;
+  favorite: boolean
 }
 
-const jobList = ref<Job[]>([
-  {
-    id: 1,
-    image: 'https://www.cursor.de/templates/yootheme/cache/a6/karriere_softwareentwickler_intro_AdobeStock_207766322_900x600-a657c930.webp',
-    jobTitle: 'Softwareentwickler (m/w/d)',
-    companyTitle: 'Tech Solutions GmbH',
-    location: 'Berlin, Deutschland',
-    description: 'Beschreibung: Wir suchen einen erfahrenen \n' +
-        'Softwareentwickler, der unser agiles Team bei der \n' +
-        'Entwicklung von innovativen Lösungen unterstützt. \n',
-    deadline: '15. März 2023',
-    startDate: 'sofort',
-  },
-  {
-    id: 2,
-    image: 'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSg5yPwDfPx6bz25o1R-Lnwm0P-xfEoDYBOlpavcg18pvJYYEoz',
-    jobTitle: 'Marketing Manager (m/w/d)',
-    companyTitle: 'MarketBoost AG',
-    location: 'München, Deutchland',
-    description: 'Beschreibung: Wir suchen einen Marketing Manager mit \n' +
-        'nachgewiesener Erfahrung im Aufbau von Marken und der \n' +
-        'Entwicklung erfolgreicher Marketingstrategien. \n' +
-        'Kommunikationsgeschick und Kreativität sind gefragt!',
-    deadline: '20. April 2023',
-    startDate: '1. Juni 2023',
-  },
-  {
-    id: 3,
-    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZRAv3hP_rWQlXIJGam07wScAtCsn513s2Jwi6ZZ6qtuQ0sQVi',
-    jobTitle: 'Finanzanalyst (m/w/d)',
-    companyTitle: 'FinanceInsights GmbH',
-    location: 'Frankfurt, Deutchland',
-    description: 'Beschreibung: Als Finanzanalyst wirst du in unserem\n' +
-        'Team für die Analyse von Finanzdaten, die Erstellung \n' +
-        'von Berichten und die Entwicklung von Prognosen \n' +
-        'verantwortlich sein.',
-    deadline: '10. April 2023',
-    startDate: '15. Mai 2023',
+const jobList = ref<Job[]>([]);
+const favoriteJobs = ref<Job[]>([]);
+const defaultCompanyLogo = 'https://imageio.forbes.com/specials-images/imageserve/5f40212498cbfd326eb150c8/0x0.jpg?format=jpg&height=900&width=1600&fit=bounds';
+
+async function loadJobList() {
+  console.log('loadJobList called');
+  try {
+    const response = await fetch('http://localhost:8080/stellenangebote');
+    if (response.ok) {
+      jobList.value = (await response.json()).map((job: Job) => ({
+        ...job,
+        favorite: false, // Initialize the favorite property
+      }));
+      console.log('jobList after fetching data:', jobList.value);
+    } else {
+      console.error('Fehler beim Laden der Stellenangebote:', response.statusText);
+    }
+  } catch (error) {
+    console.error('Fehler beim Laden der Stellenangebote:', error);
   }
-]);
+}
+
+onMounted(loadJobList);
+
+const addToFavorites = (jobId: number) => {
+  console.log('addToFavorites wurde aufgerufen');
+  console.log('jobList:', jobList.value);
+  const jobToAdd = jobList.value.find((job) => job.id === jobId);
+  console.log('Gefundener Job:', jobToAdd);
+
+  if (jobToAdd) {
+    console.log('Job wurde gefunden');
+    jobToAdd.favorite = !jobToAdd.favorite; // Toggle the favorite property
+    if (jobToAdd.favorite) {
+      console.log('Job wurde favorisiert');
+      favoriteJobs.value.push(jobToAdd); // Add to favorites if favorited
+    } else {
+      console.log('Job wurde entfavorisiert');
+      const index = favoriteJobs.value.findIndex((job) => job.id === jobId);
+      if (index !== -1) {
+        favoriteJobs.value.splice(index, 1); // Remove from favorites if unfavorited
+      }
+    }
+  }
+};
+
 </script>
 
 <style scoped>
-/* Füge die Styles für "Meine Favoriten" hinzu */
 body {
   margin: 0;
   padding: 0;
@@ -87,17 +110,14 @@ body {
   font-family: sans-serif;
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
 }
 
 .main-content {
-  flex-grow: 1;
   display: flex;
   flex-direction: column;
-  margin-top: 80px;
+  margin-top: 60px;
   margin-left: 10px;
+  min-height: 100vh;
 }
 
 .header {
@@ -128,7 +148,7 @@ body {
 }
 
 .headline {
-  height: 60px;
+  height: 50px;
   color: #444444;
   font-family: sans-serif;
   font-weight: bold;
@@ -136,8 +156,15 @@ body {
   text-align: left;
   padding: 0;
   line-height: 1.4;
-  margin-top: 60px;
+  margin-top: 70px;
+  margin-left: 40px;
 }
 
+.job-board-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  margin-left: 40px;
+}
 
 </style>
