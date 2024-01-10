@@ -1,8 +1,9 @@
 <template>
   <div>
+    <h1>{{ title }}</h1>
     <div>
       <input v-model="jobTitle" id="jobTitle" placeholder="Job Title" type="text">
-      <input v-model="company" id="company" placeholder="Company" type="text">
+      <input v-model="companyTitle" id="companyTitle" placeholder="Company Title" type="text">
       <input v-model="location" id="location" placeholder="Location" type="text">
       <input v-model="description" id="description" placeholder="Description" type="text">
       <input v-model="deadline" id="deadline" placeholder="Deadline" type="date">
@@ -17,10 +18,14 @@
 <script setup lang="ts">
 import { ref, defineEmits } from 'vue';
 
+const props = defineProps({
+  title: String
+});
+
 const emit = defineEmits(['jobPosted']);
 
 const jobTitle = ref('');
-const company = ref('');
+const companyTitle = ref('');
 const location = ref('');
 const description = ref('');
 const deadline = ref('');
@@ -29,7 +34,7 @@ const startDate = ref('');
 function saveJob() {
   const newJob = {
     jobTitle: jobTitle.value,
-    company: company.value,
+    companyTitle: companyTitle.value,
     location: location.value,
     description: description.value,
     deadline: deadline.value,
@@ -39,7 +44,7 @@ function saveJob() {
   emit('jobPosted', newJob);
 
   jobTitle.value = '';
-  company.value = '';
+  companyTitle.value = '';
   location.value = '';
   description.value = '';
   deadline.value = '';

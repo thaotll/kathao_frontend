@@ -2,7 +2,7 @@
   <div class="app">
     <div class="header">
       <p class="brand">Kathao</p>
-      <NavBar />
+      <NavBar/>
     </div>
 
     <div class="main-content">
@@ -41,6 +41,7 @@
 
           <button type="submit">Stellenangebot erstellen</button>
         </form>
+        <p>{{ message }}</p>
       </div>
     </div>
     <FooterComponent/>
@@ -49,16 +50,22 @@
 
 
 <script lang="ts">
-import {defineProps, defineEmits, ref} from 'vue';
+import {defineProps, defineEmits, ref, onMounted} from 'vue';
 import NavBar from '@/components/NavBar.vue';
 import FooterComponent from "@/components/FooterComponent.vue";
-import { useRouter } from 'vue-router';
+import {useRouter} from 'vue-router';
+
 export default {
   name: 'CreateJobView',
-  components: {FooterComponent},
-  setup() {
-    const props = defineProps({
-    });
+  components: { NavBar, FooterComponent },
+  props: {
+    jobId: {
+      type: Number,
+      default: null,
+    },
+  },
+  setup(props) {
+    const message = ref('');
 
     const emits = defineEmits();
 
@@ -69,8 +76,33 @@ export default {
     const deadline = ref('');
     const startDate = ref('');
 
+    // Function to fetch job details by jobId
+    async function fetchJobDetails(jobId: number) {
+      if (jobId !== null && jobId !== undefined) {
+        try {
+          const apiUrl = `http://localhost:8080/stellenangebote/${jobId}`;
+          const response = await fetch(apiUrl);
+
+          if (!response.ok) {
+            throw new Error('Fehlerhafte API-Antwort');
+          }
+
+          const data = await response.json();
+          jobTitle.value = data.jobTitle;
+          company.value = data.company;
+          location.value = data.location;
+          description.value = data.description;
+          deadline.value = data.deadline;
+          startDate.value = data.startDate;
+        } catch (error) {
+          console.error('Fehler beim Abrufen der Job-Daten:', error);
+        }
+      }
+    }
+
     async function createJob() {
       try {
+        const apiUrl = 'http://localhost:8080/stellenangebote';
         const newJob = {
           jobTitle: jobTitle.value,
           company: company.value,
@@ -80,7 +112,17 @@ export default {
           startDate: startDate.value,
         };
 
-        emits('jobPosted', newJob);
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(newJob),
+        });
+
+        if (!response.ok) {
+          throw new Error('Fehlerhafte API-Antwort');
+        }
 
         jobTitle.value = '';
         company.value = '';
@@ -88,10 +130,19 @@ export default {
         description.value = '';
         deadline.value = '';
         startDate.value = '';
+
+        message.value = 'Stellenangebot erfolgreich erstellt!';
+
       } catch (error) {
         console.error('Fehler beim Erstellen des Stellenangebots:', error);
       }
     }
+
+    onMounted(() => {
+      if (props.jobId !== null && props.jobId !== undefined) {
+        fetchJobDetails(props.jobId);
+      }
+    });
 
     return {
       jobTitle,
@@ -101,6 +152,7 @@ export default {
       deadline,
       startDate,
       createJob,
+      message
     };
   },
 };
@@ -139,6 +191,7 @@ export default {
   margin-top: 5px;
   cursor: pointer;
 }
+
 .headline {
   height: 60px;
   color: #444444;
@@ -165,6 +218,7 @@ export default {
 .form-group {
   margin-bottom: 15px;
 }
+
 .main-content {
   display: flex;
   flex-direction: column;
@@ -172,6 +226,7 @@ export default {
   margin-left: 10px;
   margin-bottom: 20px;
 }
+
 label {
   display: block;
   margin-bottom: 5px;

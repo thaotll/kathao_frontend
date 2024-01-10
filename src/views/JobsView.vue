@@ -80,7 +80,6 @@ body {
   display: flex;
   flex-direction: column;
   margin-top: 80px;
-  margin-left: 10px;
   min-height: calc(100vh - 80px);
   justify-content: space-between;
 }
@@ -113,7 +112,7 @@ body {
 }
 
 .headline {
-  height: 60px;
+  height: 50px;
   color: #444444;
   font-family: sans-serif;
   font-weight: bold;
@@ -121,12 +120,12 @@ body {
   text-align: left;
   padding: 0;
   line-height: 1.4;
-  margin-top: 60px;
+  margin-top: 50px;
+  margin-left: 45px;
 }
 
 .job-board-container {
   display: flex;
-  flex-wrap: wrap;
   justify-content: flex-start;
   margin-bottom: 70px;
 }
@@ -150,6 +149,8 @@ body {
   border-radius: 0px 3px 3px 0px;
   padding: 8px;
   text-align: center;
+  margin-top: -140px;
+  margin-left: 40px;
 }
 
 </style>
