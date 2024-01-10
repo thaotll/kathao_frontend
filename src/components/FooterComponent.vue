@@ -13,38 +13,35 @@
   </footer>
 </template>
 
-
 <style scoped>
 .footer {
   background-color: white;
   color: black;
   text-align: center;
   padding: 20px;
-  position: relative;
+  position: relative; /* Sticky-Position verwenden */
+  bottom: 0; /* Am unteren Bildschirmrand positionieren */
 }
-
 
 .footer-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20px;
+}
+
+.copyright {
+  margin-left: 30px;
 }
 
 .footer-nav {
   display: flex;
   gap: 20px;
+  justify-content: flex-end;
+  margin-left: -70px;
 }
 
 .footer-nav a {
   color: black;
   text-decoration: none;
 }
-
-.manage-cookies {
-  font-size: 14px;
-}
-
 </style>
-<script setup lang="ts">
-</script>
