@@ -44,7 +44,7 @@ const emitSearch = () => {
 
 .search-input input {
   width: 100%;
-  height: 85%;
+  height: 100%;
   border: 1px solid #CCCCCC;
   outline: none;
   background: transparent;
