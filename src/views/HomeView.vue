@@ -92,10 +92,10 @@ onMounted(loadJobList);
 
 const handleSearch = (searchTerm: string) => {
   if (!searchTerm.trim()) {
-    // Wenn kein Suchbegriff eingegeben wurde, setzen Sie die gefilterte Liste zurück auf die vollständige Liste
+    // Wenn kein Suchbegriff eingegeben wurde, wird die gefilterte Liste zurück auf die vollständige Liste gesetzt
     filteredJobList.value = jobList.value;
   } else {
-    // Filtern basierend auf den gegebenen Kriterien
+    // Filtert basierend auf den gegebenen Kriterien
     filteredJobList.value = jobList.value.filter((job) =>
         job.jobTitle?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         job.company?.toLowerCase().includes(searchTerm.toLowerCase()) ||

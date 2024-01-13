@@ -48,7 +48,6 @@
   </div>
 </template>
 
-
 <script lang="ts">
 import {defineProps, defineEmits, ref, onMounted} from 'vue';
 import NavBar from '@/components/NavBar.vue';
@@ -65,10 +64,13 @@ export default {
     },
   },
   setup(props) {
+    // Refs für Stellenangebotsinformationen und Erfolgsmeldung/Fehlermeldung
     const message = ref('');
 
+    // Emits für Events
     const emits = defineEmits();
 
+    // Refs für Stellenangebotsinformationen
     const jobTitle = ref('');
     const company = ref('');
     const location = ref('');
@@ -76,7 +78,7 @@ export default {
     const deadline = ref('');
     const startDate = ref('');
 
-    // Function to fetch job details by jobId
+    // Funktion zum Abrufen von Jobdetails anhand der jobId
     async function fetchJobDetails(jobId: number) {
       if (jobId !== null && jobId !== undefined) {
         try {
@@ -88,6 +90,7 @@ export default {
           }
 
           const data = await response.json();
+          // Setzt die Werte der Refs basierend auf den abgerufenen Jobdetails
           jobTitle.value = data.jobTitle;
           company.value = data.company;
           location.value = data.location;
@@ -100,9 +103,11 @@ export default {
       }
     }
 
+    // Funktion zum Erstellen eines Stellenangebots
     async function createJob() {
       try {
         const apiUrl = 'http://localhost:8080/stellenangebote';
+        // Erstellt ein neues Jobobjekt aus den Ref-Werten
         const newJob = {
           jobTitle: jobTitle.value,
           company: company.value,
@@ -112,6 +117,7 @@ export default {
           startDate: startDate.value,
         };
 
+        // Sendet einen POST-Request an die API
         const response = await fetch(apiUrl, {
           method: 'POST',
           headers: {
@@ -124,6 +130,7 @@ export default {
           throw new Error('Fehlerhafte API-Antwort');
         }
 
+        // Setzt die Ref-Werte auf leere Werte zurück
         jobTitle.value = '';
         company.value = '';
         location.value = '';
@@ -131,13 +138,15 @@ export default {
         deadline.value = '';
         startDate.value = '';
 
+        // Zeigt eine Erfolgsmeldung an
         message.value = 'Stellenangebot erfolgreich erstellt!';
-
       } catch (error) {
+        // Zeige eine Fehlermeldung an
         console.error('Fehler beim Erstellen des Stellenangebots:', error);
       }
     }
 
+    //  Jobdetails abgerufen, wenn die jobId vorhanden ist
     onMounted(() => {
       if (props.jobId !== null && props.jobId !== undefined) {
         fetchJobDetails(props.jobId);

@@ -34,6 +34,7 @@
 <script setup lang="ts">
 import { ref, defineProps, defineEmits } from 'vue';
 
+// Definition des Job-Objekts
 interface Job {
   id: number;
   jobTitle: string;
@@ -43,23 +44,28 @@ interface Job {
   deadline: string;
   startDate: string;
 }
-
+// Props und Emits definieren
 const props = defineProps({
   jobId: Number,
   job: {
     type: Object as () => Job,
-    default: () => ({}) // Provide a default value
+    default: () => ({})
   },
 });
 
 const emit = defineEmits(['save']);
 
+// Ref für das bearbeitete Stellenangebot erstellen
 let editedJob = ref({ ...props.job, id: props.jobId }); // Declare editedJob
 
+// Funktion zum Speichern des Stellenangebots
 const saveJob = async () => {
   if (props.jobId) {
     try {
+      // API-URL für die Aktualisierung des Stellenangebots erstellen
       const apiUrl = `http://localhost:8080/stellenangebote/${props.jobId}`;
+
+      // Fetch-Anfrage für die Aktualisierung senden
       const response = await fetch(apiUrl, {
         method: 'PUT',
         headers: {
@@ -67,14 +73,17 @@ const saveJob = async () => {
         },
         body: JSON.stringify(editedJob.value),
       });
-
+      // Überprüft, ob die Anfrage erfolgreich war
       if (!response.ok) {
         throw new Error('Network response was not ok: ' + response.statusText);
       }
-
+      // ruft aktualisiertes Stellenangebot aus der Antwort ab
       const editedJobResponse = await response.json();
       console.log('Stellenangebot erfolgreich aktualisiert', editedJobResponse);
-      editedJob = ref(editedJobResponse); // Update editedJob
+
+      // Ref für das bearbeitete Stellenangebot aktualisieren
+      editedJob = ref(editedJobResponse);
+      // Ereignis "save" wird emittiert und das aktualisierte Stellenangebot übergeben
       emit('save', editedJobResponse);
     } catch (error) {
       console.error('Fehler beim Aktualisieren des Stellenangebots:', error);

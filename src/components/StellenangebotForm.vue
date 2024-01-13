@@ -22,8 +22,10 @@ const props = defineProps({
   title: String
 });
 
+// Definiert Emits für das 'jobPosted'-Event
 const emit = defineEmits(['jobPosted']);
 
+// Refs für die Eingabefelder
 const jobTitle = ref('');
 const companyTitle = ref('');
 const location = ref('');
@@ -31,7 +33,9 @@ const description = ref('');
 const deadline = ref('');
 const startDate = ref('');
 
+// Funktion zum Speichern des Jobs und Auslösen des 'jobPosted'-Events
 function saveJob() {
+  // Erstellt ein neues Jobobjekt aus den Eingabewerten
   const newJob = {
     jobTitle: jobTitle.value,
     companyTitle: companyTitle.value,
@@ -41,8 +45,10 @@ function saveJob() {
     startDate: startDate.value,
   };
 
+  // Sendet das 'jobPosted'-Event mit dem neuen Jobobjekt
   emit('jobPosted', newJob);
 
+  // Setzt die Eingabefelder auf leere Werte zurück
   jobTitle.value = '';
   companyTitle.value = '';
   location.value = '';

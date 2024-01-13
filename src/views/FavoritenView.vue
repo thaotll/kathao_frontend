@@ -32,13 +32,14 @@
   </div>
 </template>
 
-
 <script setup lang="ts">
+// Importiere benötigte Komponenten und Funktionen
 import NavBar from '@/components/NavBar.vue';
 import JobBoard from '@/components/JobBoard.vue';
 import {onMounted, ref} from "vue";
 import FooterComponent from "@/components/FooterComponent.vue";
 
+// Definiere das Job-Interface
 interface Job {
   id: number;
   image: string;
@@ -52,18 +53,21 @@ interface Job {
   favorite: boolean
 }
 
+// Refs für die Liste aller Jobs, favorisierten Jobs und das Standardfirmenlogo
 const jobList = ref<Job[]>([]);
 const favoriteJobs = ref<Job[]>([]);
 const defaultCompanyLogo = 'https://imageio.forbes.com/specials-images/imageserve/5f40212498cbfd326eb150c8/0x0.jpg?format=jpg&height=900&width=1600&fit=bounds';
 
+// Funktion zum Laden der Liste aller Jobs
 async function loadJobList() {
   console.log('loadJobList called');
   try {
     const response = await fetch('http://localhost:8080/stellenangebote');
     if (response.ok) {
+      // Setze die Job-Liste und markiere jeden Job als nicht favorisiert
       jobList.value = (await response.json()).map((job: Job) => ({
         ...job,
-        favorite: false, // Initialize the favorite property
+        favorite: false,
       }));
       console.log('jobList after fetching data:', jobList.value);
     } else {
@@ -74,8 +78,10 @@ async function loadJobList() {
   }
 }
 
+// Bei der Montage der Komponente, lade die Liste aller Jobs
 onMounted(loadJobList);
 
+// Funktion zum Hinzufügen/Entfernen von Jobs zu/from den Favoriten
 const addToFavorites = (jobId: number) => {
   console.log('addToFavorites wurde aufgerufen');
   console.log('jobList:', jobList.value);
@@ -84,20 +90,19 @@ const addToFavorites = (jobId: number) => {
 
   if (jobToAdd) {
     console.log('Job wurde gefunden');
-    jobToAdd.favorite = !jobToAdd.favorite; // Toggle the favorite property
+    jobToAdd.favorite = !jobToAdd.favorite;
     if (jobToAdd.favorite) {
       console.log('Job wurde favorisiert');
-      favoriteJobs.value.push(jobToAdd); // Add to favorites if favorited
+      favoriteJobs.value.push(jobToAdd);
     } else {
       console.log('Job wurde entfavorisiert');
       const index = favoriteJobs.value.findIndex((job) => job.id === jobId);
       if (index !== -1) {
-        favoriteJobs.value.splice(index, 1); // Remove from favorites if unfavorited
+        favoriteJobs.value.splice(index, 1);
       }
     }
   }
 };
-
 </script>
 
 <style scoped>

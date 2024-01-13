@@ -27,11 +27,13 @@
 </template>
 
 <script setup lang="ts">
+// Importiert benötigte Funktionen und Komponenten
 import {ref} from 'vue';
 import {useRouter} from 'vue-router';
 import NavBar from '@/components/NavBar.vue';
 import FooterComponent from '@/components/FooterComponent.vue';
 
+// Ref für die Formulardaten und Erfolgsmeldung
 const formData = ref({
   name: '',
   email: '',
@@ -40,14 +42,16 @@ const formData = ref({
 
 const showMessage = ref(false);
 
+// Funktion zum Verarbeiten des Formulars
 const handleSubmit = () => {
-  // Perform form validation and submit logic
+  // Führt Formularvalidierung und Sendelogik durch
   if (validateForm()) {
     console.log('Formulardaten senden:', formData.value);
     showMessage.value = true;
   }
 };
 
+// Funktion zur Formularvalidierung
 const validateForm = () => {
   if (!formData.value.name || !formData.value.email || !formData.value.message) {
     alert('Bitte füllen Sie alle Felder aus.');

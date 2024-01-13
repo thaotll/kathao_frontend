@@ -10,14 +10,16 @@
 <script setup lang="ts">
 import { defineProps, defineEmits } from 'vue';
 
+// Props und Emits definieren
 const props = defineProps({
-  show: Boolean,
+  show: Boolean, // Boolean-Prop 'show', die den Modal-Zustand steuert
 });
 
-const emit = defineEmits(['update:show']);
+const emit = defineEmits(['update:show']); // Event 'update:show' für die Aktualisierung des 'show'-Props
 
+// Funktion zum Schließen des Modals
 const closeModal = () => {
-  emit('update:show', false);
+  emit('update:show', false); // Emit des 'update:show'-Events mit dem Wert 'false' zum Schließen des Modals
 };
 </script>
 

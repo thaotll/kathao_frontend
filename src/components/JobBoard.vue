@@ -25,12 +25,12 @@
   </div>
 </template>
 
-
 <script setup lang="ts">
-import {ref, defineProps, defineEmits} from 'vue';
+import { ref, defineProps, defineEmits } from 'vue';
 import EditComponent from './EditComponent.vue';
 import ModalComponent from './ModalComponent.vue';
 
+// Definition des Job-Objekts
 interface Job {
   id: number;
   image: string;
@@ -44,6 +44,7 @@ interface Job {
   favorite: boolean;
 }
 
+// Props und Emits definieren
 const props = defineProps({
   image: String,
   jobId: Number,
@@ -57,10 +58,12 @@ const emit = defineEmits(['addToFavorites', 'jobDeleted', 'save']);
 const isEditing = ref(false);
 const job = ref<Job | undefined>(undefined);
 
+// Funktion zum Starten der Bearbeitung des Stellenangebots
 const editJob = () => {
-  isEditing.value = true; // Set the editing status to true when the "Edit" button is clicked
+  isEditing.value = true;
 };
 
+// Refs für die Job-Details
 const jobTitle = ref('');
 const company = ref('');
 const location = ref('');
@@ -68,21 +71,24 @@ const description = ref('');
 const deadline = ref('');
 const startDate = ref('');
 
+// Funktion zum Hinzufügen zum Favoriten
 const addToFavorites = () => {
   if (props.jobId !== undefined) {
     emit('addToFavorites', props.jobId);
   }
 };
 
+// Funktion für den Klick auf das Herzsymbol
 const handleClick = () => {
-  console.log('Heart icon clicked');
-    addToFavorites();
+  addToFavorites();
 };
 
+// Funktion für die Bewerbung auf das Stellenangebot
 const applyNow = () => {
   alert('Bewerbung wurde eingereicht!');
 };
 
+// Funktion zum Speichern des bearbeiteten Stellenangebots
 const saveJob = async (editedJob: Job) => {
   if (isEditing.value && props.jobId) {
     try {
@@ -96,9 +102,10 @@ const saveJob = async (editedJob: Job) => {
       });
 
       if (!response.ok) {
-        throw new Error('Network response was not ok:');
+        throw new Error('Netzwerkantwort war nicht in Ordnung:');
       }
 
+      // Konsolenausgabe und Aktualisierung des bearbeiteten Jobs
       console.log('Stellenangebot erfolgreich aktualisiert');
       job.value = editedJob;
       isEditing.value = false;
@@ -110,6 +117,7 @@ const saveJob = async (editedJob: Job) => {
   }
 };
 
+// Funktion zum Löschen des Stellenangebots
 const deleteJob = async () => {
   try {
     const apiUrl = `http://localhost:8080/stellenangebote/${props.jobId}`;
@@ -118,9 +126,10 @@ const deleteJob = async () => {
     });
 
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error('Netzwerkantwort war nicht in Ordnung');
     }
 
+    // Konsolenausgabe und Benachrichtigung über das gelöschte Stellenangebot
     console.log('Stellenangebot erfolgreich gelöscht');
     emit('jobDeleted');
   } catch (error) {
@@ -128,6 +137,7 @@ const deleteJob = async () => {
   }
 };
 
+// Funktion zum Abrufen der Job-Details
 const fetchJobDetails = () => {
   const apiUrl = 'http://localhost:8080/stellenangebote/' + props.jobId;
   console.log('API-URL:', apiUrl);
@@ -140,6 +150,7 @@ const fetchJobDetails = () => {
         return response.json();
       })
       .then((data) => {
+        // Konsolenausgabe und Aktualisierung der Job-Details
         console.log('Empfangene Daten:', data);
         jobTitle.value = data.jobTitle;
         company.value = data.company;
@@ -153,6 +164,7 @@ const fetchJobDetails = () => {
       });
 };
 
+// Ausführung der Funktion zum Abrufen der Job-Details
 fetchJobDetails();
 </script>
 

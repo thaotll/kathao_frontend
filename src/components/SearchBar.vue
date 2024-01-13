@@ -12,9 +12,13 @@
 <script setup lang="ts">
 import { ref, defineEmits } from 'vue';
 
+// Ref für den Suchbegriff
 const searchTerm = ref('');
+
+// Definiert Emits für das 'search'-Event
 const emit = defineEmits(['search']);
 
+// Funktion zum Auslösen des 'search'-Events mit dem aktuellen Suchbegriff
 const emitSearch = () => {
   emit('search', searchTerm.value);
 };
