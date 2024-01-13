@@ -39,8 +39,6 @@ import NavBar from '@/components/NavBar.vue';
 import JobBoard from '@/components/JobBoard.vue';
 import {ref} from "vue";
 import FooterComponent from "@/components/FooterComponent.vue";
-import {useRouter} from 'vue-router';
-import CreateJobView from "@/views/CreateJobView.vue";
 
 interface Job {
   id: number;
@@ -54,10 +52,6 @@ interface Job {
 }
 
 const newJobs = ref<Job[]>([]);
-
-function addNewJob(newJob: Job) {
-  newJobs.value.push(newJob);
-}
 
 </script>
 
