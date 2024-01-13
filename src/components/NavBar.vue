@@ -2,15 +2,9 @@
   <nav>
     <div class="menu">
       <ul>
-        <li>
-          <RouterLink :to="{ name: 'home' }">Startseite</RouterLink>
-        </li>
-        <li :class="{ 'active': $route.name === 'favoriten' }">
-          <RouterLink :to="{ name: 'favoriten' }">Meine Favoriten</RouterLink>
-        </li>
-        <li :class="{ 'active': $route.name === 'jobs' }">
-          <RouterLink :to="{ name: 'jobs' }">Meine Jobs</RouterLink>
-        </li>
+        <li><router-link to="/">Startseite</router-link></li>
+        <li><router-link to="/favorites">Meine Favoriten</router-link></li>
+        <li><router-link to="/jobs">Meine Jobs</router-link></li>
       </ul>
     </div>
   </nav>
@@ -30,7 +24,7 @@ nav {
 .menu {
   color: #FFFFFF;
   font-family: sans-serif;
-  font-weight: 600;
+  font-weight: 400;
   font-size: 15px;
   display: flex;
   align-items: center;
@@ -55,9 +49,5 @@ nav {
 .menu a::after {
   content: '|';
   margin-left: 8px;
-}
-
-.menu .active {
-  font-weight: bold;
 }
 </style>
