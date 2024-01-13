@@ -56,8 +56,6 @@ const props = defineProps({
 const emit = defineEmits(['addToFavorites', 'jobDeleted', 'save']);
 const isEditing = ref(false);
 const job = ref<Job | undefined>(undefined);
-const favoriteJobs = ref<Job[]>([]);
-const jobList = ref<Job[]>([]);
 
 const editJob = () => {
   isEditing.value = true; // Set the editing status to true when the "Edit" button is clicked
@@ -70,34 +68,15 @@ const description = ref('');
 const deadline = ref('');
 const startDate = ref('');
 
-const addToFavorites = (jobId: number) => {
-  console.log('addToFavorites wurde aufgerufen');
-  console.log('jobList:', jobList.value);
-  const jobToAdd = jobList.value.find((job) => job.id === jobId);
-  console.log('Gefundener Job:', jobToAdd);
-
-  if (jobToAdd) {
-    console.log('Job wurde gefunden');
-    jobToAdd.favorite = !jobToAdd.favorite; // Toggle the favorite property
-    if (jobToAdd.favorite) {
-      console.log('Job wurde favorisiert');
-      favoriteJobs.value.push(jobToAdd); // Add to favorites if favorited
-    } else {
-      console.log('Job wurde entfavorisiert');
-      const index = favoriteJobs.value.findIndex((job) => job.id === jobId);
-      if (index !== -1) {
-        favoriteJobs.value.splice(index, 1); // Remove from favorites if unfavorited
-      }
-    }
+const addToFavorites = () => {
+  if (props.jobId !== undefined) {
+    emit('addToFavorites', props.jobId);
   }
 };
 
-
 const handleClick = () => {
   console.log('Heart icon clicked');
-  if (props.jobId !== undefined) {
-    addToFavorites(props.jobId);
-  }
+    addToFavorites();
 };
 
 const applyNow = () => {
@@ -179,19 +158,65 @@ fetchJobDetails();
 
 <style scoped>
 .job-board {
-  position: relative;
   display: flex;
   flex-wrap: wrap;
   background-color: #fff;
   border-radius: 20px;
   overflow: hidden;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-  width: 300px;
-  height: 380px;
-  justify-content: center;
-  margin-bottom: 50px;
-  margin-right: 100px;
-  margin-left: 30px;
+  margin: 20px 40px 10px 60px;
+  width: 290px;
+  height: 370px;
+  justify-content: space-between;
+}
+.job-image {
+  width: 100%;
+  height: 130px;
+  border-bottom: 2px solid #ccc;
+}
+
+.job-details {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.job-title {
+  font-size: 17px;
+  font-weight: bold;
+  color: black;
+}
+
+.company-title,
+.location
+{
+  color: black;
+  font-size: 13px;
+  margin-top: -1px;
+}
+
+.description,
+.date-details
+{
+  color: black;
+  margin-top: 3px;
+  margin-bottom: 0.5px;
+  font-size: 10px;
+}
+.apply-button {
+  background-color: #0570B0;
+  color: white;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  align-self: flex-end;
+  margin-top: -15px;
 }
 
 .heart-icon {
@@ -206,54 +231,5 @@ fetchJobDetails();
   color: white;
   font-size: 24px;
   z-index: 2;
-}
-
-.job-image {
-  width: 100%;
-  height: 130px;
-  border-bottom: 2px solid #ccc;
-}
-
-.job-details {
-  padding: 15px;
-  display: flex;
-  flex-direction: column;
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.job-title {
-  font-size: 17px;
-  margin: 0;
-  font-weight: bold;
-  color: black;
-}
-
-.location, .company-title {
-  color: black;
-  font-size: 14px;
-  margin-bottom: 0.5px;
-}
-
-.description,
-.date-details {
-  color: black;
-  margin-bottom: 0.5px;
-  font-size: 10px;
-}
-
-.apply-button {
-  background-color: #0570B0;
-  color: white;
-  padding: 6px 10px;
-  border: none;
-  border-radius: 7px;
-  cursor: pointer;
-  align-self: flex-end;
-  margin-top: -15px;
 }
 </style>

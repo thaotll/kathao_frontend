@@ -72,7 +72,6 @@ const emit = defineEmits(['favorite']);
 
 const jobList = ref<Job[]>([]);
 const filteredJobList = ref<Job[]>([]);
-
 const defaultCompanyLogo = 'https://imageio.forbes.com/specials-images/imageserve/5f40212498cbfd326eb150c8/0x0.jpg?format=jpg&height=900&width=1600&fit=bounds';
 
 const loadJobList = async () => {
@@ -80,7 +79,7 @@ const loadJobList = async () => {
     const response = await fetch('http://localhost:8080/stellenangebote');
     if (response.ok) {
       jobList.value = await response.json();
-      filteredJobList.value = jobList.value; // Initial set to all jobs
+      filteredJobList.value = jobList.value;
     } else {
       console.error('Fehler beim Laden der Stellenangebote:', response.statusText);
     }
@@ -136,7 +135,6 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  z-index: 100;
 }
 
 .headline-container {
@@ -168,7 +166,7 @@ body {
 }
 
 .headline {
-  height: 60px;
+  height: 50px;
   color: #444444;
   font-family: sans-serif;
   font-weight: bold;
@@ -176,7 +174,7 @@ body {
   text-align: left;
   padding: 0;
   line-height: 1.4;
-  margin: 0;
+  margin-top: 70px;
 }
 
 .subheadline {
@@ -211,6 +209,7 @@ body {
   background: #D6D6D6;
   margin-left: -80px;
   margin-bottom: 70px;
+  margin-top: 40px;
   border: none;
   clear: both;
 }

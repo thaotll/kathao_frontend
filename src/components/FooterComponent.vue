@@ -1,14 +1,10 @@
 <template>
   <footer class="footer">
     <div class="footer-content">
-      <div class="copyright">© 2023 Kathao, GmbH.</div>
-      <nav class="footer-nav">
-        <router-link to="/terms">Terms</router-link>
-        <router-link to="/privacy">Privacy</router-link>
-        <router-link to="/security">Security</router-link>
-        <router-link to="/contact">Contact</router-link>
-        <router-link to="/manage-cookies">Manage cookies</router-link>
-      </nav>
+      <div class="copyright">© 2024 Kathao, GmbH.</div>
+      <div class="footer-text">
+        Terms | Privacy | Security | Contact | Manage cookies
+      </div>
     </div>
   </footer>
 </template>
@@ -30,18 +26,13 @@
 }
 
 .copyright {
-  margin-left: 30px;
+  margin-left: 20px;
+  font-family: sans-serif;
 }
 
-.footer-nav {
-  display: flex;
-  gap: 20px;
-  justify-content: flex-end;
-  margin-left: -70px;
+.footer-text {
+  margin-right: 20px;
+  font-family: sans-serif;
 }
 
-.footer-nav a {
-  color: black;
-  text-decoration: none;
-}
 </style>

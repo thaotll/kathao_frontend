@@ -31,25 +31,22 @@ const emitSearch = () => {
   width: 60%;
   max-width: 400px;
   margin-top: 16px;
-  margin-bottom: 40px;
 }
 
 .search-button {
   max-width: 300px;
   margin-top: 16px;
-  margin-bottom: 40px;
 }
 
 .search-input input {
   width: 100%;
-  height: 100%;
+  height: 85%;
   border: 1px solid #CCCCCC;
   outline: none;
   background: transparent;
   font-family: sans-serif;
   font-size: 10px;
   color: #999999;
-  padding: 8px;
 }
 
 .search-button button {
@@ -62,7 +59,6 @@ const emitSearch = () => {
   font-family: sans-serif;
   font-size: 10px;
   cursor: pointer;
-  border-radius: 0px 3px 3px 0px;
   padding: 8px;
 }
 </style>

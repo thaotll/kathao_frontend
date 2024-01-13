@@ -86,4 +86,49 @@ const saveJob = async () => {
 </script>
 
 <style scoped>
+.edit-job {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  margin: 20px;
+  width: 400px; /* Adjust the width as needed */
+}
+
+.edit-job h2 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.edit-job form {
+  display: flex;
+  flex-direction: column;
+}
+
+.edit-job label {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.edit-job input[type="text"],
+.edit-job textarea,
+.edit-job input[type="date"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.edit-job button[type="submit"] {
+  background-color: #0570B0;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
 </style>
