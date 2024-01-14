@@ -1,9 +1,10 @@
 <template>
   <div class="job-board">
-    <img :src="image" :alt="jobTitle" class="job-image"/>
     <div class="heart-icon">
       <i class="fas fa-heart" @click="handleClick"></i>
+      <span v-if="showFavoriteMessage" class="favorite-message">Zu Favoriten gespeichert</span>
     </div>
+    <img :src="image" :alt="jobTitle" class="job-image"/>
     <div class="job-details">
       <div class="header">
         <h2 class="job-title">{{ jobTitle }}</h2>
@@ -26,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, defineEmits } from 'vue';
+import {defineEmits, defineProps, ref} from 'vue';
 import EditComponent from './EditComponent.vue';
 import ModalComponent from './ModalComponent.vue';
 
@@ -57,6 +58,7 @@ const props = defineProps({
 const emit = defineEmits(['addToFavorites', 'jobDeleted', 'save']);
 const isEditing = ref(false);
 const job = ref<Job | undefined>(undefined);
+const showFavoriteMessage = ref(false);
 
 // Funktion zum Starten der Bearbeitung des Stellenangebots
 const editJob = () => {
@@ -75,6 +77,10 @@ const startDate = ref('');
 const addToFavorites = () => {
   if (props.jobId !== undefined) {
     emit('addToFavorites', props.jobId);
+    showFavoriteMessage.value = true;
+    setTimeout(() => {
+      showFavoriteMessage.value = false;
+    }, 2000);
   }
 };
 
@@ -170,6 +176,7 @@ fetchJobDetails();
 
 <style scoped>
 .job-board {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   background-color: #fff;
@@ -178,9 +185,10 @@ fetchJobDetails();
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
   margin: 20px 40px 10px 60px;
   width: 290px;
-  height: 370px;
+  height: 380px;
   justify-content: space-between;
 }
+
 .job-image {
   width: 100%;
   height: 130px;
@@ -192,6 +200,7 @@ fetchJobDetails();
   display: flex;
   flex-direction: column;
 }
+
 .header {
   display: flex;
   justify-content: space-between;
@@ -205,21 +214,20 @@ fetchJobDetails();
 }
 
 .company-title,
-.location
-{
+.location {
   color: black;
   font-size: 13px;
   margin-top: -1px;
 }
 
 .description,
-.date-details
-{
+.date-details {
   color: black;
   margin-top: 3px;
   margin-bottom: 0.5px;
   font-size: 10px;
 }
+
 .apply-button {
   background-color: #0570B0;
   color: white;
@@ -243,5 +251,17 @@ fetchJobDetails();
   color: white;
   font-size: 24px;
   z-index: 2;
+}
+
+.favorite-message {
+  position: absolute;
+  top: 35px;
+  right: 0;
+  background-color: #0570B0;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 5px;
+  font-size: 12px;
+  width: 200px;
 }
 </style>

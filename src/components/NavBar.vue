@@ -3,7 +3,6 @@
     <div class="menu">
       <ul>
         <li><router-link to="/">Startseite</router-link></li>
-        <li><router-link to="/favorites">Meine Favoriten</router-link></li>
         <li><router-link to="/jobs">Meine Jobs</router-link></li>
       </ul>
     </div>
